@@ -1,0 +1,144 @@
+using System;
+					
+public class Program
+{
+	public static void Main()
+	{
+		Console.WriteLine("What is your desired angled?");
+		double angle = double.Parse(Console.ReadLine());
+		Console.WriteLine("What is your angle length?");
+		double angleLength = double.Parse(Console.ReadLine());
+		Console.WriteLine("What is your turn dia?");
+		double turnDia = double.Parse(Console.ReadLine());
+		Console.WriteLine("What is your tool number?");
+		double toolNum = double.Parse(Console.ReadLine());
+		Console.WriteLine("What is your nose radius?");
+		double noseRadius = double.Parse(Console.ReadLine());
+		Console.WriteLine("What is your Z escape distance?");
+		double zEscape = double.Parse(Console.ReadLine());
+		Console.WriteLine("What is last four numbers of your part number");
+		double partNum = double.Parse(Console.ReadLine());
+		
+		// 45° angle calc variables
+		double calc45Length = angleLength + noseRadius;
+		double calc45StartDia = turnDia - calc45Length;
+		
+		// Non 45° anlge calc variables
+		double calcnon45Length = angleLength + noseRadius - .02;
+		double non45Length = angleLength + noseRadius;
+		double calcnon45Radians = angle * Math.PI / 180;
+		double calcnon45Tangent = Math.Tan(calcnon45Radians);
+		double calcnon45one = calcnon45Tangent * calcnon45Length;
+		double calcnon45two = calcnon45one *2;
+		double non45Start = turnDia - calcnon45two;
+		double non45BreakStart = non45Start - .05;
+		
+		
+		//starts writing program for 45° angle
+		if (angle == 45)
+		{
+		
+			Console.WriteLine("%");
+			Console.WriteLine("O0" + partNum + ";");
+			
+			// determines if we need to add a zero infront of the offset number for the tool call line
+			if (toolNum < 10)
+			{
+				Console.WriteLine("T" + toolNum + "0" +  toolNum + ";");
+			}
+			if (toolNum > 12)
+			{
+				Console.WriteLine("Please enter a valid tool number");	
+			}
+			if (toolNum > 10 && toolNum < 12)
+			{	
+				Console.WriteLine("T" + toolNum + toolNum + ";");	
+			}
+			
+			Console.WriteLine("G54;");
+			Console.WriteLine("M8:");
+			
+			if (turnDia < 1)
+			{
+				Console.WriteLine("G50 S2500;");
+			}
+			if (turnDia >= 2 && turnDia < 2.5)
+			{
+				Console.WriteLine("G50 S2000;");
+			}
+			if (turnDia >= 2.5 && turnDia < 3)
+			{
+				Console.WriteLine("G50 S1500;");
+			}
+			if (turnDia > 3)
+			{
+				Console.WriteLine("G50 S1000;");
+			}
+			
+			Console.WriteLine("G97 S700;");
+			Console.WriteLine("G0 X10. Z.25");
+			Console.WriteLine("G0 X" + calc45StartDia.ToString("F4") + ";");
+			Console.WriteLine("G1 Z0. F.010");
+			Console.WriteLine("G1 X" + turnDia.ToString("F4") + " Z-" + calc45Length + ";");
+			Console.WriteLine("G28 U0.");
+			Console.WriteLine("G0 Z" + zEscape.ToString("F4") + ";");
+			Console.WriteLine("M30");
+			Console.WriteLine("%");
+					
+		}
+		
+		//starts writing program for non 45° angle
+		else
+		{
+			
+			Console.WriteLine("%");
+			Console.WriteLine("O0" + partNum + ";");
+			
+			// determines if we need to add a zero infront of the offset number for the tool call line
+			if (toolNum < 10)
+			{
+				Console.WriteLine("T" + toolNum + "0" +  toolNum + ";");
+			}
+			if (toolNum > 12)
+			{
+				Console.WriteLine("Please enter a valid tool number");	
+			}
+			if (toolNum > 10 && toolNum < 12)
+			{	
+				Console.WriteLine("T" + toolNum + toolNum + ";");	
+			}
+			
+			Console.WriteLine("G54;");
+			Console.WriteLine("M8:");
+			
+			if (turnDia < 1)
+			{
+				Console.WriteLine("G50 S2500;");
+			}
+			if (turnDia >= 2 && turnDia < 2.5)
+			{
+				Console.WriteLine("G50 S2000;");
+			}
+			if (turnDia >= 2.5 && turnDia < 3)
+			{
+				Console.WriteLine("G50 S1500;");
+			}
+			if (turnDia > 3)
+			{
+				Console.WriteLine("G50 S1000;");
+			}
+		
+			Console.WriteLine("G97 S700;");
+			Console.WriteLine("G0 X10. Z.25");
+			Console.WriteLine("G0 X" + non45BreakStart.ToString("F4") + ";");
+			Console.WriteLine("G1 Z0. F.012");
+			Console.WriteLine("G1 X" + non45Start.ToString("F4") + " Z-.020");
+			Console.WriteLine("G1 X" + turnDia.ToString("F4") + " Z-" + non45Length.ToString("F4") + ";");
+			Console.WriteLine("G28 U0.");
+			Console.WriteLine("G0 Z" + zEscape.ToString("F4") + ";");
+			Console.WriteLine("M30");
+			Console.WriteLine("%");
+			
+		}
+	}
+}
